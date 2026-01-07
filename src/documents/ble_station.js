@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-const md5 = require('md5')
 const debug=require('debug')('rfparty.ble_station')
 
 const Dataparty = require( '@dataparty/api/dist/dataparty-browser' )

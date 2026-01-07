@@ -94,7 +94,7 @@ module.exports = class AppleContinuity{
       if(!doc.service){doc.service={}}
 
       const actionType = DeviceIdentifiers.NearbyActionType[action] || 'unknown('+action+')'
-      doc.service.nearbyaction = { action: actionType }
+      doc.service.nearbyaction = { action: actionType, flags: flags }
     }
 
     return doc

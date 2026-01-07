@@ -1,13 +1,6 @@
 
-const xmljs = require('xml-js')
-
 import { RFParty } from './rfparty'
 import {LoadingProgress} from './loading-progress'
-import { stringify } from 'json5'
-
-import { GapParser } from './gap-parser'
-const Loki = require('lokijs')
-const LokiIndexAdapter = require('lokijs/src/loki-indexed-adapter')
 
 const Debug = require('debug/src/browser')
 const debug = Debug('MainWindow')
@@ -23,10 +16,6 @@ const RFPartyDocuments = require('./documents')
 const PermissionsDisclosureMessage = 'This app requires permissions to function.\n\n' +
   'Location: Allows reading location data even in the background in order to map BLE signal propogation.\n\n' +
   'See the Privacy Policy for more information.'
-  
-const BLEPermissionsDisclosureMessage = 'This app requires permissions to function.\n\n' +
-  'Bluetooth: Allows reading bluetooth data even in the background in order to map BLE signal propogation.\n\n' +
-  'See the Privacy Policy for more information.'
 
 //const BouncerModel = require('@dataparty/bouncer-model/dist/bouncer-model.json')
 
@@ -38,23 +27,6 @@ window.last_crash_count = parseInt( localStorage.getItem('crash_count') ) || 0
 window.crash_count = parseInt( localStorage.getItem('crash_count') ) || 0
 
 window.nodejs_pending_calls = 0
-
-const byteToHex = [];
-for(let n=0; n<0xff; ++n){
-  const hexOctet = n.toString(16).padStart(2, '0')
-  byteToHex.push(hexOctet)
-}
-
-function hexString(arrayBuffer){
-  const buf = new Uint8Array(arrayBuffer)
-  const hexOctets = [];
-
-  for(let i=0; i<buf.length; i++){
-    hexOctets.push( byteToHex[ buf[i] ] )
-  }
-
-  return hexOctets.join('')
-}
 
 const SearchSuggestions = {
   //help: false,
@@ -103,7 +75,7 @@ export class MainWindow {
     }
 
     window.channel = channel
-    await MainWindow.setupSession(window.channel)
+    await MainWindow.setupSession()
   }
 
   static hideDiv(divId){ return MainWindow.addRemoveClass(divId, 'add', 'hidden') }
@@ -159,7 +131,7 @@ export class MainWindow {
     MainWindow.showDiv('loading-text')
     MainWindow.showDiv('loading-progress-bar')
     MainWindow.hideDiv('loading-start-button')
-    await MainWindow.setupSession(window.channel)
+    await MainWindow.setupSession()
   }
 
   static openLoading(){
@@ -176,7 +148,8 @@ export class MainWindow {
       document.getElementById('loading-details').value = window.loadingState.toString()
     })
 
-    window.loadingState.on('step-progress', (name)=>{
+    window.loadingState.on('step-progress', ()=>{
+      const progress = window.loadingState.progress
       document.getElementById('loading-details').value = window.loadingState.toString()
       document.getElementById('loading-value').innerText=''+ Math.round(progress*100)
       document.getElementById('loading-progress-bar').value= progress*100
@@ -522,7 +495,7 @@ export class MainWindow {
   }
 
   
-  static async setupDb(channel){
+  static async setupDb(){
     let config = new Dataparty.Config.LocalStorageConfig({basePath:'rfparty-config'})
 
     
@@ -542,69 +515,6 @@ export class MainWindow {
     await party.start()
 
     await window.rfparty.start(party)
-    
-
-
-    return
-
-
-
-    let comms = new Dataparty.Comms.LoopbackComms({
-      channel: channel
-    })
-  
-    let peer = new Dataparty.PeerParty({
-      comms: comms,
-      noCache: true,
-      model: RFPartyModel,
-      factories: RFPartyDocuments,
-      config: config,
-      qbOptions: {debounce: false, find_dedup: true, timeout: false}
-    })
-  
-  
-    window.loadingState.startStep('start db thread')
-    let srcPath = 'main.js'
-    debug('starting nodejs - ', srcPath)
-    let nodejsStart = new Promise((resolve, reject)=>{
-      nodejs.start(srcPath, (err)=>{
-        if(err){
-          debug(err)
-          reject(err) }
-        else { resolve() }
-      })
-    })
-  
-    await nodejsStart
-    debug ('nodejs started')
-    window.loadingState.completeStep('start db thread')
-  
-    await config.start()
-    await peer.loadIdentity()
-
-    //channel.post('debug-settings', localStorage.getItem('node_debug'))
-  
-    channel.post('identity', peer.identity)
-  
-    channel.once('identity', async (identity)=>{
-      debug('onidentity', identity)
-      peer.comms.remoteIdentity = identity
-      await peer.start()
-  
-      debug('peer started')
-    })
-
-    channel.on('pending_calls',(pending)=>{
-      window.nodejs_pending_calls = pending
-      MainWindow.updateStatus()
-    })
-  
-    window.loadingState.startStep('authorized to party 😎')
-    await peer.comms.authorized()
-    debug('authorized to party 😎')
-    window.loadingState.completeStep('authorized to party 😎')
-
-    await window.rfparty.start(peer)
   }
 
   static checkGeoLocation(){
@@ -621,15 +531,9 @@ export class MainWindow {
   }
 
 
-  static setupGeoLocation(permissions){
+  static setupGeoLocation(){
 
-    //let locationProvider = BackgroundGeolocation.ACTIVITY_PROVIDER
     let locationProvider = BackgroundGeolocation.RAW_PROVIDER
-
-    /*if(permissions && permissions.denied && permissions.denied.indexOf('android.permission.ACTIVITY_RECOGNITION') != -1){
-      locationProvider = BackgroundGeolocation.RAW_PROVIDER
-      debug('WARNING - Falling back to RAW_PROVIDER. ACTIVITY_RECOGNITION permission denied')
-    }*/
 
     BackgroundGeolocation.configure({
       startOnBoot: false,
@@ -767,7 +671,7 @@ export class MainWindow {
 
   }
 
-  static async setupSession(channel){
+  static async setupSession(){
 
     MainWindow.closeSetupForm()
     MainWindow.openLoading()
@@ -800,7 +704,6 @@ export class MainWindow {
         
         if(!hasBLE){ throw new Error('This device does not have BLE support!') }
         
-        let tried = false
         let permissionsOk = false
         let bleEA = false
         
@@ -830,13 +733,10 @@ export class MainWindow {
             }
             
             if(!bleEA || !permissionsOk){   
-                await new Promise((resolve,reject)=>{
-                    cordova.plugins.diagnostic.switchToSettings(resolve, reject)
+                await new Promise((resolve)=>{
+                    cordova.plugins.diagnostic.switchToSettings(resolve, ()=>{})
                 })
             }
-            
-            
-            tried = true
         }
     })
     
@@ -846,7 +746,7 @@ export class MainWindow {
     })
     
     await window.loadingState.run('configure db', async ()=>{
-        await MainWindow.setupDb(channel)
+        await MainWindow.setupDb()
     })
 
     await window.loadingState.run('configure hardware', async ()=>{
@@ -858,7 +758,7 @@ export class MainWindow {
 
         MainWindow.setupDisply()
 
-        MainWindow.setupGeoLocation(permissions)
+        MainWindow.setupGeoLocation()
 
         window.powerManagement.setReleaseOnPause(false, function() {
         debug('wakelock - Set successfully');
@@ -1135,7 +1035,7 @@ export class MainWindow {
         const idx = key.indexOf(term)
         if(idx > -1 || term == 'help'){
           let args = SearchSuggestions[key]
-          let suggestion = `<div id="hint-${key}" onfocus="MainWindow.updateHintsSelected(\'${key}\')" onclick="MainWindow.selectHint(\'${key}\')"><span>• ${key}</span><span id="hint-params" class="hint-params">`
+          let suggestion = `<div id="hint-${key}" onfocus="MainWindow.updateHintsSelected('${key}')" onclick="MainWindow.selectHint('${key}')"><span>• ${key}</span><span id="hint-params" class="hint-params">`
           if(args == true){ suggestion+= ` [${key}]` }
           else if(typeof args == 'string'){ suggestion+=` [${args}]` }
           else if(Array.isArray(args)){ suggestion+= ' ['+args.join(' | ')+']' }

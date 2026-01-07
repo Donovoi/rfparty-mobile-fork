@@ -1,16 +1,12 @@
 //import { point } from 'leaflet'
 //import { scan } from 'node-wifi'
 
-import { last } from 'lodash'
-
 
 const debug = /*(...args)=>{ debug('rfparty', ...args) }*/  require('debug')('rfparty')
 const Leaflet = require('leaflet')
 const JSON5 = require('json5')
 const Pkg = require('../package.json')
-const JSONPath = require('jsonpath-plus').JSONPath
 const reach = require('./reach')
-const Loki = require('lokijs')
 const moment = require('moment')
 const EventEmitter = require('last-eventemitter')
 const EarthDistance = require('earth-distance-js')
@@ -19,14 +15,9 @@ const RFPartyDocuments = require('./documents')
 
 import * as UUID16_TABLES from './16bit-uuid-tables'
 import * as MANUFACTURER_TABLE from './manufacturer-company-id.json' 
-import { UUIDParser } from './parsers/uuid-parser'
 const DeviceIdentifiers = require('./device-identifiers')
 
 const JSONViewer = require('json-viewer-js/src/jsonViewer')
-
-const TILE_SERVER_DEFAULT = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-const TILE_SERVER_DARK = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-const TILE_SERVER_LIGHT = 'https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png'
 
 const TILE_SERVER_MAPBOX = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}'
 const TILE_SERVER_MAPBOX_CONFIG = {
@@ -39,7 +30,7 @@ const TILE_SERVER_MAPBOX_CONFIG = {
 }
 
 async function delay(ms=100){
-  return new Promise((resolve, reject)=>{
+  return new Promise((resolve)=>{
     setTimeout(resolve, ms)
   })
 }
@@ -890,11 +881,11 @@ export class RFParty extends EventEmitter {
         .or()
           .and()  //endtime within timebounds
             .where('timebounds.first').lt(endtime)
-            .where('timebounfs.last').gt(endtime)
+            .where('timebounds.last').gt(endtime)
           .dna()
           .and()  //starttime within timebounds
             .where('timebounds.first').lt(starttime)
-            .where('timebounfs.last').gt(starttime)
+            .where('timebounds.last').gt(starttime)
           .dna()
           .and()  //
             .where('timebounds.first').lt(endtime)
