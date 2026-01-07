@@ -631,7 +631,7 @@ export class MainWindow {
     MainWindow.setConnectionStatus(window.status_text, color || 'green')
   }
 
-  static async setupDisply(){
+  static async setupDisplay(){
 
     const p = (fn)=>{
       return ()=>{
@@ -642,7 +642,7 @@ export class MainWindow {
     }
 
     let supported = await (p(AndroidFullScreen.isSupported)())
-    supported == supported && await (p(AndroidFullScreen.isImmersiveModeSupported)())
+    supported = supported && await (p(AndroidFullScreen.isImmersiveModeSupported)())
 
     if(!supported){
       console.log('not full screen')
@@ -756,7 +756,7 @@ export class MainWindow {
         await MainWindow.scanLoop()
         }, 5*1000)
 
-        MainWindow.setupDisply()
+        MainWindow.setupDisplay()
 
         MainWindow.setupGeoLocation()
 
