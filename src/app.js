@@ -68,7 +68,7 @@ async function ready() {
   }catch(err){
     console.error('exception', err)
   }
-};
+}
 
 
 document.addEventListener("deviceready", ready, false);

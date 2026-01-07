@@ -4,7 +4,7 @@ const EarthDistance = require('earth-distance-js')
 function toLoc(location){
   return {
     lat: location.latitude || location.lat || 0,
-    lon: location.longitude || location.longitude || 0
+    lon: location.longitude || location.lon || 0
   }
 }
 
