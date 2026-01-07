@@ -50,23 +50,6 @@ const GAP_TYPES = {
   0xFF: {decode:'hex', name: 'ManufacturerData'}
 }
 
-const byteToHex = [];
-for(let n=0; n<0xff; ++n){
-  const hexOctet = n.toString(16).padStart(2, '0')
-  byteToHex.push(hexOctet)
-}
-
-function hexString(arrayBuffer){
-  const buf = new Uint8Array(arrayBuffer)
-  const hexOctets = [];
-
-  for(let i=0; i<buf.length; i++){
-    hexOctets.push( byteToHex[ buf[i] ] )
-  }
-
-  return hexOctets.join('')
-}
-
 export class GapField{
   constructor(buffer, offset=0){
     this.value = null

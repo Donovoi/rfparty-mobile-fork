@@ -269,7 +269,7 @@ const NearbyActionType = {
   0x08: 'WiFi Password',
   0x09: 'iOS Setup',
   0x0A: 'Repair',
-  0x0B: 'Speaker Setupd',
+  0x0B: 'Speaker Setup',
   0x0C: 'Apple Pay',
   0x0D: 'Whole Home Audio Setup',
   0x0E: 'Developer Tools Pairing Request',

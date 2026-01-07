@@ -1,13 +1,22 @@
 {
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 2018
   },
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "globals": {
-    "$": true
+    "$": true,
+    "cordova": true,
+    "ble": true,
+    "BackgroundGeolocation": true,
+    "AndroidFullScreen": true,
+    "universalLinks": true,
+    "nodejs": true,
+    "navigator": true
   },
   "extends": "eslint:recommended",
   "rules": {
@@ -19,6 +28,7 @@
     "no-redeclare": "warn",
     "no-unexpected-multiline": "warn",
     "no-unused-vars": "warn",
-    "no-useless-escape": "warn"
+    "no-useless-escape": "warn",
+    "no-case-declarations": "off"
   }
 }
