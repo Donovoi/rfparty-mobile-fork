@@ -49,7 +49,7 @@ This repository is enabled for GitHub Copilot to assist with development. Copilo
 - Leaflet map integration and geolocation features
 - Event-driven architecture patterns used in this codebase
 
-For detailed Copilot usage guidelines, best practices, and limitations specific to this project, see [COPILOT.md](./COPILOT.md).
+For detailed Copilot usage guidelines, best practices, and limitations specific to this project, see [COPILOT.md](/COPILOT.md).
 
 ## Usage
 

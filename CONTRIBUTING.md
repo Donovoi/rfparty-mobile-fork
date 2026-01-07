@@ -60,7 +60,7 @@ Thank you for your interest in contributing to RFParty Mobile! This document pro
 GitHub Copilot is enabled for this repository. If you have Copilot access, you can use it to assist with development.
 
 ### Using Copilot Effectively
-- **Read [COPILOT.md](./COPILOT.md)**: Comprehensive guide on using Copilot with this codebase
+- **Read [COPILOT.md](/COPILOT.md)**: Comprehensive guide on using Copilot with this codebase
 - **Understand the context**: Copilot works best when you understand what you're building
 - **Review suggestions**: Always review and test Copilot's suggestions
 - **Follow patterns**: Copilot learns from existing code, so maintaining consistency helps
@@ -79,7 +79,7 @@ GitHub Copilot is enabled for this repository. If you have Copilot access, you c
 - Build and deployment configuration
 - Platform-specific native code
 
-For detailed Copilot usage, see [COPILOT.md](./COPILOT.md).
+For detailed Copilot usage, see [COPILOT.md](/COPILOT.md).
 
 ## Submitting Changes
 
@@ -162,8 +162,8 @@ Include:
 
 ### Documentation
 - **README.md**: Installation and usage instructions
-- **COPILOT.md**: GitHub Copilot usage guide
-- **.github/copilot-instructions.md**: Copilot context for this repo
+- **[COPILOT.md](/COPILOT.md)**: GitHub Copilot usage guide
+- **[.github/copilot-instructions.md](/.github/copilot-instructions.md)**: Copilot context for this repo
 
 ### External Resources
 - [Cordova Documentation](https://cordova.apache.org/docs/en/latest/)
