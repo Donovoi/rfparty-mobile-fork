@@ -40,6 +40,17 @@ The project comes with a static code analysis tool (eslint). To launch it, use t
 $ npm run lint
 ```
 
+## GitHub Copilot
+
+This repository is enabled for GitHub Copilot to assist with development. Copilot can help with:
+- Understanding BLE (Bluetooth Low Energy) protocols and GAP parsing
+- Working with Cordova plugins and mobile development patterns
+- JavaScript/ES6+ code generation and refactoring
+- Leaflet map integration and geolocation features
+- Event-driven architecture patterns used in this codebase
+
+For detailed Copilot usage guidelines, best practices, and limitations specific to this project, see [COPILOT.md](/COPILOT.md).
+
 ## Usage
 
 ### Build RFParty
