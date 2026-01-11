@@ -12,16 +12,16 @@ Node.js 20.17+ is required for Cordova 13.
 
 Clone this project and run the npm package installation command.
 ```
-$ npm install
+npm install
 ```
 Once the components are installed, initialize the project via the init command:
 ```
-$ npm run init
+npm run init
 ```
 
 Add a platform to the project, like any cordova project.
 ````
-$ npx cordova platform add android
+npx cordova platform add android
 ````
 
 # Development
@@ -30,7 +30,7 @@ $ npx cordova platform add android
 
 The `parcel.js` cordova script is plugged into the `before_build` and `before_run` hooks to start packaging before the build or run (`config.xml`).
 ```
-$ npx cordova run
+npx cordova run
 ```
 Processing flow :
 > `npm run build` > `cordova run`
@@ -39,7 +39,7 @@ Processing flow :
 
 The project comes with a static code analysis tool (eslint). To launch it, use the command:
 ```
-$ npm run lint
+npm run lint
 ```
 
 ## GitHub Copilot
