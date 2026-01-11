@@ -8,6 +8,8 @@ Based on ![](https://cordova.apache.org/static/img/cordova_24.png) [Cordova](htt
 
 ## Installation
 
+Node.js 20.17+ is required for Cordova 13.
+
 Clone this project and run the npm package installation command.
 ```
 $ npm install
