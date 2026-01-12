@@ -10,3 +10,4 @@ res
 www
 # OS X
 .DS_Store
+www/nodejs-project/package.json
