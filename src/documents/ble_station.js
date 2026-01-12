@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const debug=require('debug')('rfparty.ble_station')
 
-const Dataparty = require( '@dataparty/api/dist/dataparty-browser' )
+const Dataparty = window.Dataparty
 
 const GeoUtils = require('../geo-utils')
 

@@ -10,6 +10,12 @@ const moment = require('moment')
 
 const Dataparty = window.Dataparty
 const RFPartyModel = require('../dataparty/xyz.dataparty.rfparty.dataparty-schema.json')
+const RFPartyDbModel = {
+  ...RFPartyModel,
+  JSONSchema: (RFPartyModel.JSONSchema || []).filter((schema)=>(
+    RFPartyModel.IndexSettings && RFPartyModel.IndexSettings[schema.title]
+  ))
+}
 
 const RFPartyDocuments = require('./documents')
 
@@ -506,7 +512,7 @@ export class MainWindow {
     let party = new Dataparty.ZangoParty({
       dbname: 'rfparty-zango-db', 
       noCache: true,
-      model: RFPartyModel,
+      model: RFPartyDbModel,
       factories: RFPartyDocuments,
       config: config,
       qbOptions: {
