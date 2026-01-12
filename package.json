@@ -26,7 +26,7 @@
     "@mauron85/cordova-plugin-background-geolocation": "^3.1.0",
     "buffer": "^6.0.3",
     "cordova": "13.0.0",
-    "cordova-android": "^13.0.0",
+    "cordova-android": "^14.0.1",
     "cordova-background-geolocation-plugin": "^2.3.3",
     "cordova-plugin-android-permissions": "^1.1.5",
     "cordova-plugin-background-mode": "github:sevenbitbyte/cordova-plugin-background-mode",
