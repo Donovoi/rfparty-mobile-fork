@@ -1,0 +1,1017 @@
+{
+  "package": {
+    "name": "xyz.dataparty.rfparty",
+    "version": "1.1.10",
+    "githash": "c9b5b74ae0dab62cc4decaa0232dcb20ce2152fa",
+    "branch": "main"
+  },
+  "schemas": {
+    "IndexSettings": {
+      "ble_obs": {
+        "indices": [
+          "time",
+          "hash"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      },
+      "ble_adv": {
+        "indices": [
+          "packet.hash",
+          "packet.parsed.serviceUuids.results",
+          "packet.parsed.serviceUuids.results",
+          "packet.parsed.product",
+          "packet.parsed.company",
+          "packet.parsed.localname",
+          "packet.parsed.broadcastname",
+          "packet.parsed.appleContinuity.service.airplay.ip",
+          "packet.parsed.appleContinuity.service.ibeacon.uuid",
+          "packet.parsed.appleContinuity.service.nearbyinfo.action",
+          "packet.seen",
+          "address",
+          "timebounds.duration",
+          "timebounds.first",
+          "timebounds.last",
+          "location.first.lat",
+          "location.first.lon",
+          "location.last.lat",
+          "location.last.lon",
+          "location.distance",
+          "geobounds.min.lat",
+          "geobounds.min.lon",
+          "geobounds.max.lat",
+          "geobounds.max.lon",
+          "best.time",
+          "best.rssi",
+          "worst.time",
+          "worst.rssi"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      },
+      "ble_station": {
+        "indices": [
+          "summary.serviceUuids.results",
+          "summary.serviceUuids.results",
+          "summary.product",
+          "summary.company",
+          "summary.localname",
+          "summary.broadcastname",
+          "summary.appleContinuity.service.airplay.ip",
+          "summary.appleContinuity.service.ibeacon.uuid",
+          "summary.appleContinuity.service.nearbyinfo.action",
+          "address",
+          "timebounds.duration",
+          "timebounds.first",
+          "timebounds.last",
+          "location.first.lat",
+          "location.first.lon",
+          "location.last.lat",
+          "location.last.lon",
+          "location.distance",
+          "geobounds.min.lat",
+          "geobounds.min.lon",
+          "geobounds.max.lat",
+          "geobounds.max.lon",
+          "best.time",
+          "best.rssi",
+          "worst.time",
+          "worst.rssi"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      },
+      "ble_source": {
+        "indices": [
+          "info.uuid",
+          "info.serial"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      },
+      "geo_track": {
+        "indices": [
+          "timebounds.duration",
+          "timebounds.first",
+          "timebounds.last",
+          "location.first.lat",
+          "location.first.lon",
+          "location.last.lat",
+          "location.last.lon",
+          "location.distance",
+          "geobounds.min.lat",
+          "geobounds.min.lon",
+          "geobounds.max.lat",
+          "geobounds.max.lon",
+          "points"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      },
+      "geo_pt": {
+        "indices": [
+          "time",
+          "latitude",
+          "longitude"
+        ],
+        "unique": [],
+        "compoundIndices": {}
+      }
+    },
+    "JSONSchema": [
+      {
+        "type": "object",
+        "properties": {
+          "rssi": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "title": "ble_obs"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "packet": {
+            "title": "packet",
+            "type": "object",
+            "properties": {
+              "hash": {
+                "type": "string"
+              },
+              "base64": {
+                "type": "string"
+              },
+              "parsed": {
+                "title": "parsed",
+                "type": "object",
+                "properties": {
+                  "gapTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "gapFields": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "serviceUuids": {
+                    "title": "serviceUuids",
+                    "type": "object",
+                    "properties": {
+                      "results": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "known": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "unknown": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "serviceData": {
+                    "type": "object"
+                  },
+                  "hasUnknownService": {
+                    "type": "boolean"
+                  },
+                  "product": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "companyCode": {
+                    "type": "string"
+                  },
+                  "txpower": {
+                    "type": "number"
+                  },
+                  "localname": {
+                    "type": "string"
+                  },
+                  "broadcastname": {
+                    "type": "string"
+                  },
+                  "appleContinuity": {
+                    "title": "appleContinuity",
+                    "type": "object",
+                    "properties": {
+                      "typeCode": {
+                        "type": "string"
+                      },
+                      "services": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "protocolError": {
+                        "type": "object"
+                      },
+                      "service": {
+                        "title": "service",
+                        "type": "object",
+                        "properties": {
+                          "airplay": {
+                            "title": "airplay",
+                            "type": "object",
+                            "properties": {
+                              "ip": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "ibeacon": {
+                            "title": "ibeacon",
+                            "type": "object",
+                            "properties": {
+                              "uuid": {
+                                "type": "string"
+                              },
+                              "major": {
+                                "type": "string"
+                              },
+                              "minor": {
+                                "type": "string"
+                              },
+                              "txPower": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "findmy": {
+                            "title": "findmy",
+                            "type": "object",
+                            "properties": {
+                              "maintained": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          "nearbyaction": {
+                            "title": "nearbyaction",
+                            "type": "object",
+                            "properties": {
+                              "action": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "nearbyinfo": {
+                            "title": "nearbyinfo",
+                            "type": "object",
+                            "properties": {
+                              "actionCode": {
+                                "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
+                              },
+                              "flags": {
+                                "title": "flags",
+                                "type": "object",
+                                "properties": {
+                                  "unknownFlag1": {
+                                    "type": "boolean"
+                                  },
+                                  "unknownFlag2": {
+                                    "type": "boolean"
+                                  },
+                                  "primaryDevice": {
+                                    "type": "boolean"
+                                  },
+                                  "airdropRxEnabled": {
+                                    "type": "boolean"
+                                  },
+                                  "airpodsConnectedScreenOn": {
+                                    "type": "boolean"
+                                  },
+                                  "authTag4Bytes": {
+                                    "type": "boolean"
+                                  },
+                                  "wifiOn": {
+                                    "type": "boolean"
+                                  },
+                                  "hasAuthTag": {
+                                    "type": "boolean"
+                                  },
+                                  "watchLocked": {
+                                    "type": "boolean"
+                                  },
+                                  "watchAutoLock": {
+                                    "type": "boolean"
+                                  },
+                                  "autoLock": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "seen": {
+                "type": "number"
+              }
+            }
+          },
+          "created": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "timebounds": {
+            "title": "timebounds",
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "number"
+              },
+              "first": {
+                "type": "number"
+              },
+              "last": {
+                "type": "number"
+              }
+            }
+          },
+          "location": {
+            "title": "location",
+            "type": "object",
+            "properties": {
+              "first": {
+                "title": "first",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "last": {
+                "title": "last",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "distance": {
+                "type": "number"
+              }
+            }
+          },
+          "geobounds": {
+            "title": "geobounds",
+            "type": "object",
+            "properties": {
+              "min": {
+                "title": "min",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "max": {
+                "title": "max",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "best": {
+            "title": "best",
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "rssi": {
+                "type": "number"
+              }
+            }
+          },
+          "worst": {
+            "title": "worst",
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "rssi": {
+                "type": "number"
+              }
+            }
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "required": [
+          "created"
+        ],
+        "title": "ble_adv"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "title": "summary",
+            "type": "object",
+            "properties": {
+              "gapTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gapFields": {
+                "type": "array",
+                "items": {}
+              },
+              "serviceUuids": {
+                "title": "serviceUuids",
+                "type": "object",
+                "properties": {
+                  "results": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "known": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "unknown": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "serviceData": {
+                "type": "object"
+              },
+              "hasUnknownService": {
+                "type": "boolean"
+              },
+              "product": {
+                "type": "string"
+              },
+              "company": {
+                "type": "string"
+              },
+              "companyCode": {
+                "type": "string"
+              },
+              "txpower": {
+                "type": "number"
+              },
+              "localname": {
+                "type": "string"
+              },
+              "broadcastname": {
+                "type": "string"
+              },
+              "appleContinuity": {
+                "title": "appleContinuity",
+                "type": "object",
+                "properties": {
+                  "typeCode": {
+                    "type": "string"
+                  },
+                  "services": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "protocolError": {
+                    "type": "object"
+                  },
+                  "service": {
+                    "title": "service",
+                    "type": "object",
+                    "properties": {
+                      "airplay": {
+                        "title": "airplay",
+                        "type": "object",
+                        "properties": {
+                          "ip": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "ibeacon": {
+                        "title": "ibeacon",
+                        "type": "object",
+                        "properties": {
+                          "uuid": {
+                            "type": "string"
+                          },
+                          "major": {
+                            "type": "string"
+                          },
+                          "minor": {
+                            "type": "string"
+                          },
+                          "txPower": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "findmy": {
+                        "title": "findmy",
+                        "type": "object",
+                        "properties": {
+                          "maintained": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "nearbyaction": {
+                        "title": "nearbyaction",
+                        "type": "object",
+                        "properties": {
+                          "action": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "nearbyinfo": {
+                        "title": "nearbyinfo",
+                        "type": "object",
+                        "properties": {
+                          "actionCode": {
+                            "type": "string"
+                          },
+                          "action": {
+                            "type": "string"
+                          },
+                          "flags": {
+                            "title": "flags",
+                            "type": "object",
+                            "properties": {
+                              "unknownFlag1": {
+                                "type": "boolean"
+                              },
+                              "unknownFlag2": {
+                                "type": "boolean"
+                              },
+                              "primaryDevice": {
+                                "type": "boolean"
+                              },
+                              "airdropRxEnabled": {
+                                "type": "boolean"
+                              },
+                              "airpodsConnectedScreenOn": {
+                                "type": "boolean"
+                              },
+                              "authTag4Bytes": {
+                                "type": "boolean"
+                              },
+                              "wifiOn": {
+                                "type": "boolean"
+                              },
+                              "hasAuthTag": {
+                                "type": "boolean"
+                              },
+                              "watchLocked": {
+                                "type": "boolean"
+                              },
+                              "watchAutoLock": {
+                                "type": "boolean"
+                              },
+                              "autoLock": {
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "created": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string"
+          },
+          "timebounds": {
+            "title": "timebounds",
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "number"
+              },
+              "first": {
+                "type": "number"
+              },
+              "last": {
+                "type": "number"
+              }
+            }
+          },
+          "location": {
+            "title": "location",
+            "type": "object",
+            "properties": {
+              "first": {
+                "title": "first",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "last": {
+                "title": "last",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "distance": {
+                "type": "number"
+              }
+            }
+          },
+          "geobounds": {
+            "title": "geobounds",
+            "type": "object",
+            "properties": {
+              "min": {
+                "title": "min",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "max": {
+                "title": "max",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "best": {
+            "title": "best",
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "rssi": {
+                "type": "number"
+              }
+            }
+          },
+          "worst": {
+            "title": "worst",
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "rssi": {
+                "type": "number"
+              }
+            }
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "required": [
+          "created"
+        ],
+        "title": "ble_station"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "number"
+          },
+          "info": {
+            "title": "info",
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "type": "string"
+              },
+              "serial": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "platform": {
+                "type": "string"
+              },
+              "sdkVersion": {
+                "type": "string"
+              },
+              "manufacturer": {
+                "type": "string"
+              },
+              "cordova": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "required": [
+          "created"
+        ],
+        "title": "ble_source"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "number"
+          },
+          "timebounds": {
+            "title": "timebounds",
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "number"
+              },
+              "first": {
+                "type": "number"
+              },
+              "last": {
+                "type": "number"
+              }
+            }
+          },
+          "location": {
+            "title": "location",
+            "type": "object",
+            "properties": {
+              "first": {
+                "title": "first",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "last": {
+                "title": "last",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "distance": {
+                "type": "number"
+              }
+            }
+          },
+          "geobounds": {
+            "title": "geobounds",
+            "type": "object",
+            "properties": {
+              "min": {
+                "title": "min",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              },
+              "max": {
+                "title": "max",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "points": {
+            "type": "number"
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "required": [
+          "created"
+        ],
+        "title": "geo_track"
+      },
+      {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "number"
+          },
+          "accuracy": {
+            "type": "number"
+          },
+          "altitude": {
+            "type": "number"
+          },
+          "bearing": {
+            "type": "number"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "speed": {
+            "type": "number"
+          },
+          "isStationary": {
+            "type": "boolean"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "locationProvider": {
+            "type": "number"
+          },
+          "isFromMockProvider": {
+            "type": "boolean"
+          },
+          "mockLocationsEnabled": {
+            "type": "boolean"
+          },
+          "_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$"
+          }
+        },
+        "title": "geo_pt"
+      }
+    ],
+    "Permissions": {
+      "ble_obs": {
+        "read": true,
+        "new": true,
+        "change": true
+      },
+      "ble_adv": {
+        "read": true,
+        "new": true,
+        "change": true
+      },
+      "ble_station": {
+        "read": true,
+        "new": true,
+        "change": true
+      },
+      "ble_source": {
+        "read": true,
+        "new": true,
+        "change": true
+      },
+      "geo_track": {
+        "read": true,
+        "new": true,
+        "change": true
+      },
+      "geo_pt": {
+        "read": true,
+        "new": true,
+        "change": true
+      }
+    }
+  },
+  "documents": {},
+  "endpoints": {},
+  "middleware": {
+    "pre": {},
+    "post": {}
+  },
+  "middleware_order": {
+    "pre": [],
+    "post": []
+  },
+  "tasks": {},
+  "compileSettings": {
+    "cache": false,
+    "externals": [
+      "debug",
+      "@dataparty/crypto",
+      "@dataparty/tasker",
+      "joi",
+      "@hapi/hoek"
+    ],
+    "minify": false,
+    "sourceMap": true,
+    "sourceMapRegister": false,
+    "watch": false,
+    "v8cache": false,
+    "quiet": false,
+    "debugLog": false
+  }
+}
