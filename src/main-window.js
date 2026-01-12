@@ -8,7 +8,7 @@ const onLocationDebug = Debug('geolocation')
 const moment = require('moment')
 
 
-const Dataparty = require( '@dataparty/api/dist/dataparty-browser' )
+const Dataparty = window.Dataparty
 const RFPartyModel = require('../dataparty/xyz.dataparty.rfparty.dataparty-schema.json')
 
 const RFPartyDocuments = require('./documents')
@@ -496,6 +496,10 @@ export class MainWindow {
 
   
   static async setupDb(){
+    if (!Dataparty) {
+      throw new Error('Dataparty library not loaded. Check dataparty-browser.js.')
+    }
+
     let config = new Dataparty.Config.LocalStorageConfig({basePath:'rfparty-config'})
 
     
