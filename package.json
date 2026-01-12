@@ -17,8 +17,8 @@
     "clean-nodejs": "cd www/nodejs-project && npm run clean",
     "build-nodejs": "cd www/nodejs-project && npm run build",
     "build-party": "./scripts/build-party.sh",
-    "build-dev": "parcel build index.html --no-optimize --no-source-maps --no-content-hash --public-url . --dist-dir ./www index.html",
-    "build": "npm run build-party; npm run build-nodejs; parcel build index.html --no-optimize --no-content-hash --no-scope-hoist --public-url . --dist-dir ./www index.html"
+    "build-dev": "parcel build index.html --no-optimize --no-source-maps --no-content-hash --public-url . --dist-dir ./www index.html; cp node_modules/@dataparty/api/dist/dataparty-browser.js www/",
+    "build": "npm run build-party; npm run build-nodejs; parcel build index.html --no-optimize --no-content-hash --no-scope-hoist --public-url . --dist-dir ./www index.html; cp node_modules/@dataparty/api/dist/dataparty-browser.js www/"
   },
   "author": "Dataparty",
   "license": "Apache-2.0",
@@ -81,7 +81,8 @@
     "watcherGlob": "**"
   },
   "parcelIgnore": [
-    "cordova.js"
+    "cordova.js",
+    "dataparty-browser.js"
   ],
   "transforms": {
     "*.html": [
