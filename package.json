@@ -29,8 +29,6 @@
     "cordova-android": "^13.0.0",
     "cordova-background-geolocation-plugin": "^2.3.3",
     "cordova-plugin-android-permissions": "^1.1.5",
-    "cordova-plugin-androidx": "^3.0.0",
-    "cordova-plugin-androidx-adapter": "^1.1.3",
     "cordova-plugin-background-mode": "github:sevenbitbyte/cordova-plugin-background-mode",
     "cordova-plugin-badge": "github:katzer/cordova-plugin-badge",
     "cordova-plugin-ble-central": "2.0.0",
@@ -64,10 +62,10 @@
     "earth-distance-js": "^1.4.1",
     "json-viewer-js": "^1.0.8",
     "json5": "^2.2.3",
-    "jsonpath-plus": "^7.0.0",
+    "jsonpath-plus": "^10.3.0",
     "last-eventemitter": "^1.1.1",
     "leaflet": "^1.9.4",
-    "lodash": "^4.17.21",
+    "lodash": "4.17.21",
     "lokijs": "^1.5.12",
     "md5": "^2.3.0",
     "moment": "^2.30.1",
@@ -96,15 +94,14 @@
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-play-default-sounds": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-local-notification": {
-        "ANDROID_SUPPORT_V4_VERSION": "26.+"
+        "ANDROID_SUPPORT_V4_VERSION": "26.+",
+        "spec": "github:rgarciadelongoria/cordova-plugin-local-notifications"
       },
       "cordova-plugin-ble-central": {
         "ACCESS_BACKGROUND_LOCATION": "true"
       },
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-androidx": {},
       "cordova-background-geolocation-plugin": {
         "GOOGLE_PLAY_SERVICES_VERSION": "11+",
         "ICON": "@mipmap/ic_launcher",

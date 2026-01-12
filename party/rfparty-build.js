@@ -1,3 +1,4 @@
+const fs = require('fs')
 const Path = require('path')
 const debug = require('debug')('rfparty.build')
 
@@ -8,7 +9,9 @@ async function main(){
   const service = new RfpartyService({ name: Pkg.name, version: Pkg.version })
 
 
-  const build = await service.compile(Path.join(__dirname,'../dataparty'), true)
+  const outputDir = Path.join(__dirname, '../dataparty')
+  fs.mkdirSync(outputDir, { recursive: true })
+  const build = await service.compile(outputDir, true)
 
   debug('compiled')
 }
