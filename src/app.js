@@ -1,110 +1,128 @@
+import { MainWindow } from "./main-window";
 
-import {MainWindow} from './main-window'
+import { RFParty } from "./rfparty";
 
-import { RFParty } from './rfparty'
+const JSONPath = require("jsonpath-plus").JSONPath;
 
-const JSONPath = require('jsonpath-plus').JSONPath
-
-
-function bootLog(message){
+function bootLog(message) {
+  console.log("[BOOT]", message);
   if (window.__bootLog) {
-    window.__bootLog(message)
+    window.__bootLog(message);
   }
 }
 
-bootLog('boot: app.js loaded')
-window.__booted = true
+bootLog("boot: app.js loaded");
+window.__booted = true;
 
+// Debug helper to track loading progress
+window.__debugStep = function(step) {
+  bootLog("step: " + step);
+};
 
-window.JSONPath = JSONPath
-window.rfparty = null
-window.RFParty = RFParty
-window.MainWindow = MainWindow
+window.JSONPath = JSONPath;
+window.rfparty = null;
+window.RFParty = RFParty;
+window.MainWindow = MainWindow;
+window.bootLog = bootLog;
 
-const Dataparty = window.Dataparty
+const Dataparty = window.Dataparty;
 if (!Dataparty) {
-  console.error('Dataparty library not loaded. Check dataparty-browser.js.')
-  bootLog('boot: Dataparty missing')
+  console.error("Dataparty library not loaded. Check dataparty-browser.js.");
+  bootLog("boot: ERROR - Dataparty missing!");
+} else {
+  bootLog("boot: Dataparty loaded OK");
 }
 
-window.Dataparty = Dataparty
+window.Dataparty = Dataparty;
 
 function channelListener(msg) {
-  console.log('[cordova] received:' + msg);
+  console.log("[cordova] received:" + msg);
 }
 
-function ondebug(msg){
-  console.log(msg)
+function ondebug(msg) {
+  console.log(msg);
 }
 
-function onerror(msg){
-  console.log('error', msg)
-  console.error(msg)
+function onerror(msg) {
+  console.log("error", msg);
+  console.error(msg);
 }
 
+async function main(channel) {
+  console.log("app.js - main()");
+  bootLog("boot: main()");
 
-async function main(channel){
-  console.log('app.js - main()')
-  bootLog('boot: main()')
-
-  try{
-    await MainWindow.onload('map', channel)
-    bootLog('boot: MainWindow.onload complete')
+  try {
+    await MainWindow.onload("map", channel);
+    bootLog("boot: MainWindow.onload complete");
+  } catch (err) {
+    console.log("error", err);
+    bootLog(
+      "boot: main error " + (err && err.message ? err.message : String(err))
+    );
   }
-  catch(err){
-    console.log('error', err)
-    bootLog('boot: main error ' + (err && err.message ? err.message : String(err)))
-  }
-
 }
 
-
-let readyStarted = false
+let readyStarted = false;
 
 async function ready() {
   if (readyStarted) {
-    return
+    return;
   }
-  readyStarted = true
-  bootLog('boot: deviceready fired')
-    
- let channel = undefined
+  readyStarted = true;
+  bootLog("boot: deviceready fired");
 
- try{
-  channel = nodejs.channel
- } catch (err){
-  console.log('app running without nodejs')
- }
- 
- if(channel){
-    nodejs.channel.setListener(channelListener)
-    nodejs.channel.on('debug', ondebug)
-    nodejs.channel.on('error', onerror)
- }
+  let channel = undefined;
 
-  try{
-    await main(channel).catch(err=>{
-      console.log('ERROR - app.js main catch' + JSON.stringify(err,null,2), err)
-      bootLog('boot: main catch ' + (err && err.message ? err.message : String(err)))
-    }).then(()=>{
-      console.log('finished app.js')
-      bootLog('boot: finished app.js')
-    })
-  }catch(err){
-    console.error('exception', err)
-    bootLog('boot: ready exception ' + (err && err.message ? err.message : String(err)))
+  try {
+    channel = nodejs.channel;
+  } catch (err) {
+    console.log("app running without nodejs");
+  }
+
+  if (channel) {
+    nodejs.channel.setListener(channelListener);
+    nodejs.channel.on("debug", ondebug);
+    nodejs.channel.on("error", onerror);
+  }
+
+  try {
+    await main(channel)
+      .catch((err) => {
+        console.log(
+          "ERROR - app.js main catch" + JSON.stringify(err, null, 2),
+          err
+        );
+        bootLog(
+          "boot: main catch " + (err && err.message ? err.message : String(err))
+        );
+      })
+      .then(() => {
+        console.log("finished app.js");
+        bootLog("boot: finished app.js");
+      });
+  } catch (err) {
+    console.error("exception", err);
+    bootLog(
+      "boot: ready exception " +
+        (err && err.message ? err.message : String(err))
+    );
   }
 }
-
 
 function registerDeviceReady() {
-  if (window.cordova && window.cordova.channel && window.cordova.channel.onDeviceReady && window.cordova.channel.onDeviceReady.fired) {
-    console.log('deviceready already fired, starting app')
-    ready()
-    return
+  if (
+    window.cordova &&
+    window.cordova.channel &&
+    window.cordova.channel.onDeviceReady &&
+    window.cordova.channel.onDeviceReady.fired
+  ) {
+    console.log("deviceready already fired, starting app");
+    ready();
+    return;
   }
 
-  document.addEventListener('deviceready', ready, false)
+  document.addEventListener("deviceready", ready, false);
 }
 
-registerDeviceReady()
+registerDeviceReady();
