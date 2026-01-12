@@ -98,7 +98,44 @@
         <small>map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a></small>
       </footer>-->
 
+      <div id="boot-status" class="boot-status hidden"></div>
+
+      <script>
+        (function(){
+          var el = document.getElementById('boot-status')
+          if (!el) { return }
+
+          function log(msg){
+            try{
+              var line = document.createElement('div')
+              line.textContent = msg
+              el.appendChild(line)
+              el.classList.remove('hidden')
+            } catch (err) {}
+          }
+
+          window.__bootLog = log
+          log('boot: html loaded')
+
+          window.addEventListener('error', function(event){
+            log('error: ' + (event && event.message ? event.message : 'unknown'))
+          })
+
+          window.addEventListener('unhandledrejection', function(event){
+            var reason = (event && event.reason && event.reason.message) ? event.reason.message : String(event && event.reason ? event.reason : 'unknown')
+            log('promise: ' + reason)
+          })
+
+          setTimeout(function(){
+            if(!window.__booted){
+              log('boot: waiting for app.js')
+            }
+          }, 3000)
+        })()
+      </script>
+
       <script type="text/javascript" src="./cordova.js"></script>
+      <script src="./dataparty-browser.js" data-parcel-ignore></script>
       <script src="src/app.js" type="module"></script>
 
     </body>
