@@ -5,7 +5,8 @@
   "description": "A bluetooth tricorder",
   "source": "./index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node src/platform/platform.test.js",
+    "test:platform": "node src/platform/platform.test.js",
     "start": "parcel index.html --dist-dir ./.dist",
     "init": "node ./scripts/init.js",
     "prepare-nodejs": "cd www/nodejs-project && TARGET_ARCH=arm64 TARGET_PLATFORM=android npm install",
@@ -24,6 +25,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@mauron85/cordova-plugin-background-geolocation": "^3.1.0",
+    "@parcel/transformer-webmanifest": "^2.16.3",
     "buffer": "^6.0.3",
     "cordova": "13.0.0",
     "cordova-android": "^14.0.1",
