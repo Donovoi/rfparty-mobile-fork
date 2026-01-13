@@ -65,6 +65,7 @@
     "jsonpath-plus": "^10.3.0",
     "last-eventemitter": "^1.1.1",
     "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "lodash": "4.17.21",
     "lokijs": "^1.5.12",
     "md5": "^2.3.0",
