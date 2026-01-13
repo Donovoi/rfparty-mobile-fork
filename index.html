@@ -9,7 +9,13 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>rfparty</title>
+
+    <!-- PWA Manifest - loaded at runtime to avoid Parcel processing -->
+    <link rel="apple-touch-icon" href="./src/img/logo.png">
 
     <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css" />
 
@@ -196,6 +202,31 @@
     <script type="text/javascript" src="./cordova.js"></script>
     <script src="./dataparty-browser.js" data-parcel-ignore></script>
     <script src="src/app.js" type="module"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      // Add PWA manifest dynamically to avoid Parcel processing
+      if (!window.cordova) {
+        var manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = 'manifest.json';
+        document.head.appendChild(manifestLink);
+      }
+
+      if ('serviceWorker' in navigator && !window.cordova) {
+        window.addEventListener('load', function () {
+          // Use a variable to avoid Parcel trying to process this
+          var swPath = 'service-worker.js';
+          navigator.serviceWorker.register(swPath)
+            .then(function (registration) {
+              console.log('[PWA] Service Worker registered:', registration.scope);
+            })
+            .catch(function (error) {
+              console.log('[PWA] Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
 
   </body>
 

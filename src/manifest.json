@@ -1,0 +1,23 @@
+{
+    "name": "RFParty BLE Scanner",
+    "short_name": "RFParty",
+    "description": "Bluetooth Low Energy scanner and mapper",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0f1614",
+    "theme_color": "#4CAF50",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "logo.cfeac381.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "utilities",
+        "navigation"
+    ],
+    "prefer_related_applications": false
+}
