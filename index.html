@@ -57,11 +57,31 @@
     </div>
 
     <div id="device-info" class='device-info hidden'>
-      <span class="close" onclick="window.MainWindow.hideDiv('device-info')">X</span>
+      <div class="device-info-header">
+        <span class="close" onclick="window.MainWindow.hideDiv('device-info')">X</span>
+        <button id="device-info-copy" class="copy-btn" onclick="window.MainWindow.copyDeviceInfo()">📋 Copy</button>
+      </div>
       <h3 id='device-info-name'>name</h3>
       <span id='device-info-duration'>duration</span><br>
       <span id='device-info-address'>address</span><br>
       <span id='device-info-company'>company</span><br>
+
+      <div id='device-info-rssi-section' class='rssi-section'>
+        <h4>Signal Strength</h4>
+        <div class='rssi-display'>
+          <span class='rssi-label'>Best:</span>
+          <span id='device-info-best-rssi' class='rssi-value'>--</span>
+          <span class='rssi-unit'>dBm</span>
+          <span id='device-info-best-distance' class='distance-estimate'></span>
+        </div>
+        <div class='rssi-display'>
+          <span class='rssi-label'>Worst:</span>
+          <span id='device-info-worst-rssi' class='rssi-value'>--</span>
+          <span class='rssi-unit'>dBm</span>
+          <span id='device-info-worst-distance' class='distance-estimate'></span>
+        </div>
+        <div class='distance-confidence' id='device-info-distance-confidence'></div>
+      </div>
 
       <h4>Services</h4>
 
@@ -72,6 +92,27 @@
     </div>
 
     <div id="map" class="content"></div>
+
+    <!-- RSSI Signal Strength Legend -->
+    <div id="rssi-legend" class="rssi-legend">
+      <div class="rssi-legend-title">Signal Strength</div>
+      <div class="rssi-legend-item">
+        <div class="rssi-legend-dot" style="background: #00ff00;"></div>
+        <span>Excellent (-50+)</span>
+      </div>
+      <div class="rssi-legend-item">
+        <div class="rssi-legend-dot" style="background: #ffff00;"></div>
+        <span>Good (-60 to -70)</span>
+      </div>
+      <div class="rssi-legend-item">
+        <div class="rssi-legend-dot" style="background: #ffa500;"></div>
+        <span>Fair (-70 to -80)</span>
+      </div>
+      <div class="rssi-legend-item">
+        <div class="rssi-legend-dot" style="background: #ff0000;"></div>
+        <span>Weak (-90+)</span>
+      </div>
+    </div>
 
     <!-- The Modal -->
     <div id="setup-modal" class="modal hidden">
@@ -119,30 +160,34 @@
         var el = document.getElementById('boot-status')
         if (!el) { return }
 
-        function log(msg) {
+        function log(msg, isError) {
           try {
             var line = document.createElement('div')
             line.textContent = msg
             el.appendChild(line)
-            el.classList.remove('hidden')
+            // Only show console on errors, not normal boot messages
+            if (isError) {
+              el.classList.remove('hidden')
+            }
           } catch (err) { }
         }
 
-        window.__bootLog = log
-        log('boot: html loaded')
+        window.__bootLog = function (msg) { log(msg, false); }
+        window.__bootError = function (msg) { log(msg, true); }
+        log('boot: html loaded', false)
 
         window.addEventListener('error', function (event) {
-          log('error: ' + (event && event.message ? event.message : 'unknown'))
+          log('error: ' + (event && event.message ? event.message : 'unknown'), true)
         })
 
         window.addEventListener('unhandledrejection', function (event) {
           var reason = (event && event.reason && event.reason.message) ? event.reason.message : String(event && event.reason ? event.reason : 'unknown')
-          log('promise: ' + reason)
+          log('promise: ' + reason, true)
         })
 
         setTimeout(function () {
           if (!window.__booted) {
-            log('boot: waiting for app.js')
+            log('boot: waiting for app.js', true)
           }
         }, 3000)
       })()

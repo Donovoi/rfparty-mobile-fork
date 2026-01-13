@@ -160,6 +160,115 @@ export class MainWindow {
     await MainWindow.setupSession();
   }
 
+  static copyDeviceInfo() {
+    // Gather all the device info text
+    const nameEl = document.getElementById("device-info-name");
+    const name =
+      nameEl && !nameEl.classList.contains("hidden") ? nameEl.textContent : "";
+    const duration =
+      document.getElementById("device-info-duration").textContent || "";
+    const address =
+      document.getElementById("device-info-address").textContent || "";
+    const company =
+      document.getElementById("device-info-company").textContent || "";
+    const services =
+      document.getElementById("device-info-services").textContent || "";
+
+    // Get RSSI and distance info
+    const bestRssi =
+      document.getElementById("device-info-best-rssi").textContent || "--";
+    const worstRssi =
+      document.getElementById("device-info-worst-rssi").textContent || "--";
+    const bestDistance =
+      document.getElementById("device-info-best-distance").textContent || "";
+    const worstDistance =
+      document.getElementById("device-info-worst-distance").textContent || "";
+
+    // Get the JSON data from the stored device data
+    let jsonData = "";
+    try {
+      // Use the stored JSON data from rfparty
+      if (window.rfparty && window.rfparty.currentDeviceJson) {
+        jsonData = JSON.stringify(window.rfparty.currentDeviceJson, null, 2);
+      }
+    } catch (e) {
+      console.error("Error formatting JSON for copy:", e);
+      jsonData = "[Error formatting data]";
+    }
+
+    // Build copy text with proper formatting
+    let copyText = "BLE Device Info\n================\n";
+    if (name) {
+      copyText += `Name: ${name}\n`;
+    }
+    copyText += `Address: ${address}\n`;
+    if (duration) {
+      copyText += `Duration: ${duration}\n`;
+    }
+    if (company) {
+      copyText += `Company: ${company}\n`;
+    }
+    copyText += `\nSignal Strength:\n`;
+    copyText += `  Best: ${bestRssi} dBm`;
+    if (bestDistance) {
+      copyText += ` (${bestDistance})`;
+    }
+    copyText += `\n  Worst: ${worstRssi} dBm`;
+    if (worstDistance) {
+      copyText += ` (${worstDistance})`;
+    }
+    copyText += `\n`;
+    if (services && services.trim()) {
+      copyText += `\nServices:\n${services}\n`;
+    }
+    if (jsonData && jsonData.trim()) {
+      copyText += `\nRaw Data:\n${jsonData}`;
+    }
+
+    // Copy to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(copyText)
+        .then(() => {
+          MainWindow.showCopyFeedback();
+        })
+        .catch((err) => {
+          MainWindow.fallbackCopy(copyText);
+        });
+    } else {
+      MainWindow.fallbackCopy(copyText);
+    }
+  }
+
+  static fallbackCopy(text) {
+    // Fallback for older browsers/webviews
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      MainWindow.showCopyFeedback();
+    } catch (err) {
+      alert("Failed to copy. Please manually select and copy the text.");
+    }
+    document.body.removeChild(textArea);
+  }
+
+  static showCopyFeedback() {
+    const btn = document.getElementById("device-info-copy");
+    const originalText = btn.textContent;
+    btn.textContent = "✓ Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.classList.remove("copied");
+    }, 2000);
+  }
+
   static openLoading() {
     MainWindow.showDiv("modal-shadow");
     MainWindow.showDiv("center-modal", "remove", "hidden", "flex");
@@ -213,6 +322,7 @@ export class MainWindow {
       MainWindow.hideDiv("logo");
       MainWindow.hideDiv("modal-shadow");
       MainWindow.hideDiv("loading-bar");
+      MainWindow.hideDiv("boot-status");
       MainWindow.addRemoveClass("logo", "remove", "rainbow-busy");
     }, 2000);
   }
@@ -238,6 +348,10 @@ export class MainWindow {
   }
 
   static async onLocation(location) {
+    console.log(
+      "[LOCATION] Received location event:",
+      JSON.stringify(location)
+    );
     onLocationDebug("location", location);
 
     const point = {
@@ -263,6 +377,18 @@ export class MainWindow {
 
   static async onBleDevice(dev) {
     debug("device", dev);
+    console.log("onBleDevice - full device object:", JSON.stringify(dev));
+    console.log(
+      "onBleDevice - advertising type:",
+      typeof dev.advertising,
+      Object.prototype.toString.call(dev.advertising)
+    );
+    if (dev.advertising && dev.advertising.byteLength !== undefined) {
+      console.log(
+        "onBleDevice - advertising is ArrayBuffer with length:",
+        dev.advertising.byteLength
+      );
+    }
 
     window.rfparty.indexDevice(dev);
     MainWindow.scanLoop();
@@ -598,6 +724,7 @@ export class MainWindow {
           reportDuplicates: false,
           scanMode: "lowLatency",
           reportDelay: 0,
+          legacy: true, // Enable legacy mode for advertising data on newer Android
         },
         MainWindow.onBleDevice,
         console.error
@@ -686,7 +813,9 @@ export class MainWindow {
   }
 
   static setupGeoLocation() {
-    let locationProvider = BackgroundGeolocation.RAW_PROVIDER;
+    // Use ACTIVITY_PROVIDER (Fused Location) for better indoor/outdoor coverage
+    // RAW_PROVIDER is GPS-only and doesn't work well indoors
+    let locationProvider = BackgroundGeolocation.ACTIVITY_PROVIDER;
 
     BackgroundGeolocation.configure({
       startOnBoot: false,
@@ -729,6 +858,7 @@ export class MainWindow {
     })*/
 
     BackgroundGeolocation.on("error", function(error) {
+      console.log("[GEOLOC] ERROR:", error.code, error.message);
       onLocationDebug(
         "[ERROR] BackgroundGeolocation error:",
         error.code,
@@ -737,14 +867,17 @@ export class MainWindow {
     });
 
     BackgroundGeolocation.on("start", function() {
+      console.log("[GEOLOC] BackgroundGeolocation service has been started");
       onLocationDebug("[INFO] BackgroundGeolocation service has been started");
     });
 
     BackgroundGeolocation.on("stop", function() {
+      console.log("[GEOLOC] BackgroundGeolocation service has been stopped");
       onLocationDebug("[INFO] BackgroundGeolocation service has been stopped");
     });
 
     BackgroundGeolocation.checkStatus(function(status) {
+      console.log("[GEOLOC] checkStatus:", JSON.stringify(status));
       onLocationDebug(
         "[INFO] BackgroundGeolocation service is running",
         status.isRunning
@@ -758,7 +891,10 @@ export class MainWindow {
       );
 
       if (!status.isRunning) {
+        console.log("[GEOLOC] Starting BackgroundGeolocation service...");
         BackgroundGeolocation.start();
+      } else {
+        console.log("[GEOLOC] BackgroundGeolocation already running");
       }
     });
 
